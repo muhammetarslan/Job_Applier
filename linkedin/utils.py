@@ -3,6 +3,7 @@ import os
 import time
 
 driver = webdriver.Chrome('chromedriver')
+driver.maximize_window()
 page_number = 1
 
 def login():
@@ -30,15 +31,36 @@ def change_page_get_new_list():
     res_lst = driver.find_elements_by_css_selector('.jobs-search-results__list.artdeco-list >li')
     return res_lst
 
-login()
-res = search_sdet()
-for posting in res:
-    time.sleep(1)
-    posting.click()
-while page_number<4:
-    res = change_page_get_new_list()
+'''description stored in html elements under #job-details//span
+    this method will scrap them and return the job details
+'''
+def job_description():
+    description_elements = driver.find_elements_by_xpath('//div[@id="job-details"]//*//*')
+    description = ''
+
+    for element in description_elements:
+        description+=('\n'+element.text)
+
+    return description
+
+def applier():
+    login()
+    res = search_sdet()
     for posting in res:
+        time.sleep(1)
+        print(job_description())
         posting.click()
+    while page_number<2:
+        time.sleep(2)
+        res = change_page_get_new_list()
+        for posting in res:
+            time.sleep(1)
+            print(job_description())
+            posting.click()
+
+applier()
+
+
 
 
 
