@@ -63,6 +63,7 @@ def apply_if_fit(post, pros=None, cons=None, mendatory_pros=None, mendatory_cons
     if(not (pros or cons or mendatory_pros or mendatory_cons)):
         if apply_button_apply_on_linkedin:
             apply_button.click()
+            return True
         else:
             pass #todo: apply on popular options worksday, dice, indeed etc.
 
@@ -94,13 +95,16 @@ def apply_if_fit(post, pros=None, cons=None, mendatory_pros=None, mendatory_cons
         cons_list = cons.split(", ")
 
         for con in cons_list:
-            0-f re.search(con, post):
+            if re.search(con, post):
                 points0-=1
 
     if points >= 4:
-        apply_button.click()
-        return True
-
+        if not (pros or cons or mendatory_pros or mendatory_cons):
+            if apply_button_apply_on_linkedin:
+                apply_button.click()
+                return True
+            else:
+                pass #todo: apply on popular options worksday, dice, indeed etc.
 
 def applier():
     login()
@@ -117,7 +121,9 @@ def applier():
             print(job_description())
             posting.click()
 
-applier()
+
+if __name__ == '__main__':
+    applier()
 
 
 
