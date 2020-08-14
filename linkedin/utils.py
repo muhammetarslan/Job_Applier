@@ -3,9 +3,13 @@ import os
 import time
 import re
 from datetime import datetime
+import platform
 
+if platform.system() == 'Windows':
+    driver = webdriver.Chrome('../resources/chromedriver.exe')
+else:
+    driver = webdriver.Chrome('chromedriver')
 
-driver = webdriver.Chrome('chromedriver')
 driver.maximize_window()
 page_number = 1
 
