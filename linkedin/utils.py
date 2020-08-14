@@ -2,6 +2,7 @@ from selenium import webdriver
 import os
 import time
 import re
+from datetime import datetime
 
 
 driver = webdriver.Chrome('chromedriver')
@@ -96,7 +97,7 @@ def apply_if_fit(post, pros=None, cons=None, mendatory_pros=None, mendatory_cons
 
         for con in cons_list:
             if re.search(con, post):
-                points0-=1
+                points-=1
 
     if points >= 4:
         if not (pros or cons or mendatory_pros or mendatory_cons):
@@ -105,6 +106,23 @@ def apply_if_fit(post, pros=None, cons=None, mendatory_pros=None, mendatory_cons
                 return True
             else:
                 pass #todo: apply on popular options worksday, dice, indeed etc.
+
+
+def save_applied():
+    job_title = driver.find_element_by_class_name('jobs-details-top-card__job-title t-20 t-black t-normal')
+    company = driver.find_element_by_xpath("(//a[@data-control-name='company_link'])[2]")
+    location = driver.find_element_by_xpath("(//span[@class='jobs-details-top-card__bullet'])[1]")
+    date = datetime.now()
+    try:
+        f = open('applied_jobs.csv','a')
+        f.write('\n{company}, {job_title}, {location}, {date}'.format(company, job_title, location, date))
+        f.close()
+    except FileNotFoundError:
+        print('creating applied_jobs.csv file in the project root directory')
+        f = open('applied_jobs.csv','w')
+        f.write('{company}, {job_title}, {location}, {date}'.format(company, job_title, location, date))
+
+
 
 def applier():
     login()

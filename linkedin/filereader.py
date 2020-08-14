@@ -13,7 +13,19 @@ m_pros, javascript
 m_cons, clearance
 '''
 def read_pros_cons_text_file(text_path):
-    line_list = open(text_path,'r').readlines()
+    try:
+        line_list = open(text_path,'r').readlines()
+    except FileNotFoundError:
+        print(
+            'File not found. Please create a proscons.txt located in the described path.\n'
+              'File format should be like: '
+              'The first line of the file starts with pros, ...\n'
+              'than cons \n'
+              'mendatory pros \n'
+              'mendatory cons \n'
+              )
+        raise FileNotFoundError
+
     pros = None
     cons = None
     m_pros = None
