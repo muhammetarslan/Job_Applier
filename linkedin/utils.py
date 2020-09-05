@@ -130,6 +130,7 @@ def apply_if_fit(post, pros=None, cons=None, mendatory_pros=None, mendatory_cons
             while driver.find_element_by_xpath("((//div[contains(@class,'jobs-easy-apply')])[2]//span[@class='artdeco-button__text'])[last()]"):
                 driver.find_element_by_xpath(
                     "((//div[contains(@class,'jobs-easy-apply')])[2]//span[@class='artdeco-button__text'])[last()]").click()
+                # todo : click dissmiss and keep applying. Save the applied.
             driver.find_elements_by_css_selector(
                 ".artdeco-modal__dismiss.artdeco-button.artdeco-button--circle.artdeco-button--muted.artdeco-button--2.artdeco-button--tertiary.ember-view").click()
             return True
