@@ -29,6 +29,7 @@ def login():
 def search_sdet():
     # driver.get('https://www.linkedin.com/jobs/search/?keywords=sdet&sortBy=DD')
     driver.get('https://www.linkedin.com/jobs/search/?f_LF=f_AL&keywords=sdet&sortBy=DD')
+    # driver.get('https://www.linkedin.com/jobs/search/?f_LF=f_AL&geoId=103644278&keywords=junior%20developer&location=United%20States&sortBy=DD')
     time.sleep(2)
     res_lst = driver.find_elements_by_css_selector('.jobs-search-results__list.artdeco-list >li')
     return res_lst
@@ -78,7 +79,7 @@ def apply_if_fit(post, pros=None, cons=None, mendatory_pros=None, mendatory_cons
     apply_button_apply_on_linkedin = False if apply_button.get_attribute('aria-label').endswith(
         'company website') else True
 
-    #for now we just want to check easy applies
+    # for now we just want to check easy applies
 
     if not apply_button_apply_on_linkedin:
         return
@@ -123,34 +124,40 @@ def apply_if_fit(post, pros=None, cons=None, mendatory_pros=None, mendatory_cons
             if re.search(con, post):
                 points -= 1
 
-    if points >= 4:
+    if points >= 2:
         if apply_button_apply_on_linkedin:
             apply_button.click()
             time.sleep(1)
-            while driver.find_element_by_xpath("((//div[contains(@class,'jobs-easy-apply')])[2]//span[@class='artdeco-button__text'])[last()]"):
-                driver.find_element_by_xpath(
-                    "((//div[contains(@class,'jobs-easy-apply')])[2]//span[@class='artdeco-button__text'])[last()]").click()
-                # todo : click dissmiss and keep applying. Save the applied.
-            driver.find_elements_by_css_selector(
-                ".artdeco-modal__dismiss.artdeco-button.artdeco-button--circle.artdeco-button--muted.artdeco-button--2.artdeco-button--tertiary.ember-view").click()
+            try:
+                while driver.find_element_by_xpath(
+                        "((//div[contains(@class,'jobs-easy-apply')])[2]//span[@class='artdeco-button__text'])[last()]"):
+                    driver.find_element_by_xpath(
+                        "((//div[contains(@class,'jobs-easy-apply')])[2]//span[@class='artdeco-button__text'])[last()]").click()
+                    # todo : click dissmiss and keep applying. Save the applied.
+            except:
+                print('clicks done')
+            time.sleep(2)
+            driver.find_element_by_xpath(
+                "(//button[@aria-label='Dismiss'])[1]").click()
             return True
         else:
             pass  # todo: apply on popular options worksday, dice, indeed etc.
 
 
 def save_applied():
-    job_title = driver.find_element_by_class_name('jobs-details-top-card__job-title t-20 t-black t-normal')
-    company = driver.find_element_by_xpath("(//a[@data-control-name='company_link'])[2]")
-    location = driver.find_element_by_xpath("(//span[@class='jobs-details-top-card__bullet'])[1]")
+    time.sleep(1)
+    job_title = driver.find_element_by_css_selector('.jobs-details-top-card__job-title.t-20.t-black.t-normal').text
+    company = driver.find_element_by_xpath("(//a[@data-control-name='company_link'])[2]").text
+    location = driver.find_element_by_xpath("(//span[@class='jobs-details-top-card__bullet'])[1]").text
     date = datetime.now()
     try:
         f = open('applied_jobs.csv', 'a')
-        f.write('\n{company}, {job_title}, {location}, {date}'.format(company, job_title, location, date))
+        f.write('\n{company}, {job_title}, {location}, {date}'.format(company=company, job_title=job_title, location=location, date=date))
         f.close()
     except FileNotFoundError:
         print('creating applied_jobs.csv file in the project root directory')
         f = open('applied_jobs.csv', 'w')
-        f.write('{company}, {job_title}, {location}, {date}'.format(company, job_title, location, date))
+        f.write('\n{company}, {job_title}, {location}, {date}'.format(company=company, job_title=job_title, location=location, date=date))
 
 
 def applier():
